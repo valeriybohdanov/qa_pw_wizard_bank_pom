@@ -1,6 +1,7 @@
-import { test } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { faker } from '@faker-js/faker';
-
+import { AddCustomerPage } from '../../../src/pages/manager/AddCustomerPage';
+import { CustomersListPage } from '../../../src/pages/manager/CustomersListPage';
 test.beforeEach(async ({ page }) => {
   /* 
   Pre-conditons:
@@ -10,6 +11,12 @@ test.beforeEach(async ({ page }) => {
   4. Fill the Postal Code.
   5. Click [Add Customer].
   */
+  const addCustomerPage = new AddCustomerPage(page)
+
+  await addCustomerPage.open()
+  await addCustomerPage.addNewCustomer()
+
+
 });
 
 test('Assert manager can delete customer', async ({ page }) => {
@@ -21,4 +28,13 @@ test('Assert manager can delete customer', async ({ page }) => {
   4. Reload the page.
   5. Assert customer row is not present in the table. 
   */
+  const customersListPage = new CustomersListPage(page)
+  const addCustomerPage = new AddCustomerPage(page)
+
+  await customersListPage.open()
+  await customersListPage.deleteCustomerRaw()
+  await customersListPage.isNotPresentCustomerRaw()
+  await addCustomerPage.reloadPage() 
+  await customersListPage.isNotPresentCustomerRaw()
+
 });
